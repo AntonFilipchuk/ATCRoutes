@@ -3,6 +3,7 @@ import { calculateBearingAndDistance } from './modules/bearingAndDistanceCalcula
 import * as dataFormatter from './modules/dataFormatter.js'
 import * as drawer from './modules/drawer.js'
 import * as intersections from './modules/intersections.js'
+import { findIntersectionBetweenRoutes } from './modules/routessIntersectionFinder.js';
 
 
 var canvas = document.getElementById("canvas");
@@ -22,15 +23,18 @@ const path1 = ["emgas", "lazit", "riren", "ofira", "somag", "roruk", "ww058", "w
 const testRoute = 
 {
     name: "test",
-    route: {
+    points: {
         test1 : "280",
-        test2 : "250"
+        test2 : "270",
+        test4 : "250",
+        test5 : "240",
+        test6 : "230",
     }
 }
 
 const dimgi3A = {
     name: "dimgi3A",
-    route: {
+    points: {
         dimgi: "280",
         vivzo: "270",
         mefed: "260",
@@ -61,25 +65,10 @@ dataFormatter.getCoordinatesData().then(rawCoordinatesData => {
 
     let dimgi3AFormatted = dataFormatter.getFormattedRoute(dimgi3A, formattedCoordinatesToCartesion);
     let testRouteFormatted = dataFormatter.getFormattedRoute(testRoute, formattedCoordinatesToCartesion);
-    //console.log(formattedRoute);
-
+    
     drawer.drawRoute(dimgi3AFormatted, ctx, "red", 10);
     drawer.drawRoute(testRouteFormatted, ctx, "green", 10);
-
-
-    ///////
-
-    const dimgi = dimgi3AFormatted.route.dimgi;
-    const vivzo = dimgi3AFormatted.route.vivzo
-
-    const test1point = testRouteFormatted.route.test1;
-    const test2point = testRouteFormatted.route.test2;
-
-    const intersection = intersections.findIntersection(dimgi, vivzo, test1point, test2point);
-
-
-    drawer.drawPoint(intersection, ctx);
-    console.log(intersection)
-
+    
+    findIntersectionBetweenRoutes(dimgi3AFormatted,testRouteFormatted);
 }
 )

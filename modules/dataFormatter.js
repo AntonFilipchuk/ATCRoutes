@@ -47,35 +47,36 @@ export function getformatedCoordinatesToCartesion(formattedCoordinates, originCo
 export function getFormattedRoute(routeData, formattedCoordinatesToCartesion) {
     const fullRouteInfo = {
         name: routeData.name,
-        route: {}
+        points: {}
     };
 
-    const { route } = routeData;
+    const { points } = routeData;
 
-    for (const pointName in route) {
-        const altitudeInfo = route[pointName].split("-");
+    for (const pointName in points) {
+        const altitudeInfo = points[pointName].split("-");
+        const coordinates = formattedCoordinatesToCartesion[pointName];
+
+        if (!coordinates) {
+            console.error(`Can't find coordinates for ${pointName} point in formatted coordinates list!`);
+            break;
+        }
+
         if (altitudeInfo.length == 1) {
-            //get X and Y for a point
-            //Then add Z coordinate
-            const coordinates = formattedCoordinatesToCartesion[pointName];
+            //Add Z coordinate to coordinates
             coordinates.z = +altitudeInfo[0];
-
-            fullRouteInfo.route[pointName] = coordinates;
+            fullRouteInfo.points[pointName] = coordinates;
             continue;
         }
 
         //We can get a range of altitudes for a point
         //In such case we format them like {x : val, y : val, z : val, z1 : val};
-        const coordinates = formattedCoordinatesToCartesion[pointName];
-
         altitudeInfo.forEach((altitude, index) => {
-            if(index == 0)
-            {
+            if (index == 0) {
                 coordinates.z = +altitude;
             }
             coordinates[`z` + `${index}`] = +altitude;
         })
-        fullRouteInfo.route[pointName] = coordinates;
+        fullRouteInfo.points[pointName] = coordinates;
     }
 
     return fullRouteInfo;
@@ -86,7 +87,7 @@ function getCoordinate(coordinateName, coordiantes) {
     let coordinate = coordiantes[coordinateName]
 
     if (!coordinate) {
-        console.warn(`Can't find point ${coordinateName} in the coordinates list!`);
+        console.error(`Can't find point ${coordinateName} in the coordinates list!`);
         return undefined;
     }
 

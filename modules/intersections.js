@@ -2,6 +2,9 @@ export const name = "intersections";
 
 // Function to find if lines intersect
 export function findIntersection(p1, p2, q1, q2) {
+
+    console.log(p1, p2, q1, q2);
+    
     // Direction vectors for each line
     const d1 = { x: p2.x - p1.x, y: p2.y - p1.y, z: p2.z - p1.z };
     const d2 = { x: q2.x - q1.x, y: q2.y - q1.y, z: q2.z - q1.z };
