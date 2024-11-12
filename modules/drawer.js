@@ -34,7 +34,7 @@ export function drawRoute(routeData, canvasContext, color, width) {
 }
 
 
-function drawPoint(pointCoordinates, canvasContext) {
+export function drawPoint(pointCoordinates, canvasContext) {
     canvasContext.fillRect(
         pointCoordinates.x - pointWidth / 2,
         pointCoordinates.y - pointHeight / 2,

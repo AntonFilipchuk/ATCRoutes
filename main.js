@@ -1,8 +1,5 @@
-import { findIntersection } from './modules/intersections.js';
-import { calculateBearingAndDistance } from './modules/bearingAndDistanceCalculations.js';
 import * as dataFormatter from './modules/dataFormatter.js'
 import * as drawer from './modules/drawer.js'
-import * as intersections from './modules/intersections.js'
 import { findIntersectionBetweenRoutes } from './modules/routessIntersectionFinder.js';
 
 
@@ -20,15 +17,16 @@ const originCoordinateName = "rw06";
 const path = ["dimgi", "vivzo", "mefed", "logpu", "duzev", "otsur", "gekla", "enmur", "kibur", "lo", "bemas", "tebdi", "tepta", "fidot", "roruk"];
 const path1 = ["emgas", "lazit", "riren", "ofira", "somag", "roruk", "ww058", "ww192", "ww191"];
 
-const testRoute = 
+const testRoute =
 {
     name: "test",
     points: {
-        test1 : "280",
-        test2 : "270",
-        test4 : "250",
-        test5 : "240",
-        test6 : "230",
+        test1: "280",
+        test2: "270",
+        test3: "260",
+        test4: "250",
+        test5: "240",
+        test6: "200",
     }
 }
 
@@ -44,8 +42,8 @@ const dimgi3A = {
         gekla: "190",
         enmur: "150-160",
         kibur: "150",
-        lo: "130-140",
-        bemas: "110-130",
+        lo: "140",
+        bemas: "130",
         tebdi: "100",
         tepta: "80",
         fidot: "70",
@@ -60,15 +58,21 @@ dataFormatter.getCoordinatesData().then(rawCoordinatesData => {
 
     let formattedCoordinatesToCartesion =
         dataFormatter.getformatedCoordinatesToCartesion(formattedCoordinates, originCoordinateName, magneticDeviation, width / 2, height / 2, distanceCoeficient);
-    
+
     //console.log(formattedCoordinatesToCartesion);
 
     let dimgi3AFormatted = dataFormatter.getFormattedRoute(dimgi3A, formattedCoordinatesToCartesion);
     let testRouteFormatted = dataFormatter.getFormattedRoute(testRoute, formattedCoordinatesToCartesion);
-    
+
     drawer.drawRoute(dimgi3AFormatted, ctx, "red", 10);
     drawer.drawRoute(testRouteFormatted, ctx, "green", 10);
-    
-    findIntersectionBetweenRoutes(dimgi3AFormatted,testRouteFormatted);
+
+    const intersections = findIntersectionBetweenRoutes(dimgi3AFormatted, testRouteFormatted);
+
+    console.log(intersections);
+
+    intersections.forEach(intersection => { drawer.drawPoint(intersection, ctx) });
+
+
 }
 )

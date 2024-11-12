@@ -3,8 +3,6 @@ export const name = "intersections";
 // Function to find if lines intersect
 export function findIntersection(p1, p2, q1, q2) {
 
-    console.log(p1, p2, q1, q2);
-    
     // Direction vectors for each line
     const d1 = { x: p2.x - p1.x, y: p2.y - p1.y, z: p2.z - p1.z };
     const d2 = { x: q2.x - q1.x, y: q2.y - q1.y, z: q2.z - q1.z };
@@ -37,6 +35,12 @@ export function findIntersection(p1, p2, q1, q2) {
     const t = ((q1.x - p1.x) * d2.y - (q1.y - p1.y) * d2.x) / (d1.x * d2.y - d1.y * d2.x);
     const u = ((p1.x - q1.x) * d1.y - (p1.y - q1.y) * d1.x) / (d2.x * d1.y - d2.y * d1.x);
 
+
+    if (t < 0 || t > 1 || u < 0 || u > 1) {
+        return null; // Intersection is outside the line segments
+    }
+
+
     // Calculate potential intersection points on each line
     const intersectP1 = {
         x: Math.round(p1.x + t * d1.x),
@@ -56,9 +60,12 @@ export function findIntersection(p1, p2, q1, q2) {
         Math.abs(intersectP1.y - intersectQ1.y) < 10 &&
         Math.abs(intersectP1.z - intersectQ1.z) < 10
     ) {
-        console.log("Intersection found");
         return intersectP1; // Intersection point
     } else {
-        return "The lines do not intersect";
+        return undefined;
     }
 }
+
+
+
+
