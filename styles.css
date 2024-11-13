@@ -1,3 +1,56 @@
 canvas {
-    border: 1px solid blue;
+  border: 1px solid blue;
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.menus-flex-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.menu-select-calegory-button {
+  font-size: 128px;
+}
+
+.data-flex-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+table,
+th,
+td {
+  border: 1px solid black;
+}
+
+th,
+td {
+  font-size: 64px;
+}
+
+.coordinates-table {
+  width: 100%;
+}
+
+.coordinates-buttons-container {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.edit-coordinate-button {
+  background-color: green ;
+  font-size: 64px;
+}
+
+.delete-coordinate-button {
+  background-color: red ;
+  font-size: 64px;
 }

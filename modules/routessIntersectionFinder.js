@@ -46,8 +46,8 @@ export function findIntersectionBetweenRoutes(route1, route2) {
             
 
             if (intersection) {
-                console.log(route1Point1,route1Point2,route2Point1,route2Point2)
-                console.log(`Intersection found! \nRoute: ${route1.name} and ${route2.name} \nSegment: [${pointNameRoute1} - ${nextPointNameRoute1}] and [${pointNameRoute2} - ${nextPointNameRoute2}]`);
+                //console.log(route1Point1,route1Point2,route2Point1,route2Point2)
+                //console.log(`Intersection found! \nRoute: ${route1.name} and ${route2.name} \nSegment: [${pointNameRoute1} - ${nextPointNameRoute1}] and [${pointNameRoute2} - ${nextPointNameRoute2}]`);
                 intersections.push(intersection);
             }
         })

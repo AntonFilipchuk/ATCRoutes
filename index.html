@@ -1,16 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
 
-<body>
-    <canvas id="canvas" height="4000" width="4000"></canvas>
-</body>
-<script type="module" src="./main.js"></script>
-
+  <body>
+    <div class="flex-container">
+      <div class="canvas-flex-container">
+        <canvas id="canvas" height="4000" width="4000"></canvas>
+      </div>
+      <div class="data-flex-container">
+        <div class="menus-flex-container">
+          <div></div>
+          <h1 class="menu-select-calegory-button">Routes</h1>
+          <div>
+            <h1 class="menu-select-calegory-button">Coordinates</h1>
+          </div>
+        </div>
+        <div id="data-container">
+          <table class="coordinates-table" id="coordinates-table">
+            <thead>
+              <tr>
+                <th>Point Name</th>
+                <th>Latitude</th>
+                <th>Longitude</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script type="module" src="./main.js"></script>
 </html>
