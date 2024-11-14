@@ -42,7 +42,7 @@ export function drawPoints(route, canvasContext, fillColor, strokeColor, strokeW
     drawnPoints.push(drawPointAsPath(point, canvasContext));
   });
 
-  return drawPoints;
+  return drawnPoints;
 }
 
 export function drawPoint(pointCoordinates, canvasContext) {
@@ -56,17 +56,18 @@ export function drawPoint(pointCoordinates, canvasContext) {
 
 
 
-function drawPointAsPath(pointCoordinates, canvasContext) {
+function drawPointAsPath(point, canvasContext) {
   const path = new Path2D();
   path.rect(
-    pointCoordinates.x - pointWidth / 2,
-    pointCoordinates.y - pointHeight / 2,
+    point.x - pointWidth / 2,
+    point.y - pointHeight / 2,
     pointWidth,
     pointHeight
   );
   canvasContext.stroke(path);
   canvasContext.fill(path);
-  return path;
+  point.path = path;
+  return point;
 }
 
 function drawText(pointName, point, canvasContext) {

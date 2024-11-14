@@ -55,6 +55,7 @@ export function getFormattedRoute(routeData, formattedCoordinatesToCartesion) {
     for (const pointName in points) {
         const altitudeInfo = points[pointName].split("-");
         const coordinates = formattedCoordinatesToCartesion[pointName];
+        coordinates.name = pointName;
 
         if (!coordinates) {
             console.error(`Can't find coordinates for ${pointName} point in formatted coordinates list!`);

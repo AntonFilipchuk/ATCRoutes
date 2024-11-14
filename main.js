@@ -7,8 +7,11 @@ const coordinatesTable = document.getElementById("coordinates-table");
 const width = 4000;
 const height = 4000;
 
-const pointsCanvasContext = document.getElementById("points-canvas").getContext("2d");
-const routesCanvasContext = document.getElementById("lines-canvas").getContext("2d");
+const pointsCanvas = document.getElementById("points-canvas");
+const pointsCanvasContext = pointsCanvas.getContext("2d");
+const routesCanvasContext = document
+  .getElementById("lines-canvas")
+  .getContext("2d");
 console.log(pointsCanvasContext);
 
 pointsCanvasContext.canvas.height = height;
@@ -114,12 +117,81 @@ dataFormatter.getCoordinatesData().then((rawCoordinatesData) => {
     formattedCoordinatesToCartesion
   );
 
-  const dimgiPoints = drawer.drawPoints(dimgi3AFormatted, pointsCanvasContext, "red", "black", 10);
-  drawer.drawRoute(dimgi3AFormatted, routesCanvasContext, "red", 10)
+  let dimgiPoints = drawer.drawPoints(
+    dimgi3AFormatted,
+    pointsCanvasContext,
+    "red",
+    "black",
+    10
+  );
+  drawer.drawRoute(dimgi3AFormatted, routesCanvasContext, "red", 10);
 
-  const testPoints = drawer.drawPoints(testRouteFormatted, pointsCanvasContext, "green", "black", 10);
-  drawer.drawRoute(testRouteFormatted, routesCanvasContext, "green", 10)
+  const testPoints = drawer.drawPoints(
+    testRouteFormatted,
+    pointsCanvasContext,
+    "green",
+    "black",
+    10
+  );
+  drawer.drawRoute(testRouteFormatted, routesCanvasContext, "green", 10);
+
+  dragPoint(
+    dimgiPoints,
+    pointsCanvas,
+    pointsCanvasContext,
+    () => {
+      dimgiPoints = drawer.drawPoints(
+        dimgi3AFormatted,
+        pointsCanvasContext,
+        "red",
+        "black",
+        10
+      );
+    },
+    dimgi3AFormatted.points
+  );
+  // pointsCanvas.addEventListener("mousedown", (event) => {
+  //   draggablePoint(event, dimgiPoints[0], pointsCanvasContext);
+  // });
 });
+
+function dragPoint(points, canvas, ctx, drawPoints, formattedPoins) {
+  console.log(formattedPoins);
+
+  let selectedPoint = undefined;
+
+  canvas.addEventListener("mousedown", (event) => {
+    const x = event.offsetX;
+    const y = event.offsetY;
+
+    if (!selectedPoint) {
+      for (const point of points) {
+        const pointPath = point.path;
+        if (
+          ctx.isPointInPath(pointPath, x, y) ||
+          ctx.isPointInStroke(pointPath, x, y)
+        ) {
+          console.log(`Selected point ${point.name}!`, point);
+          selectedPoint = point;
+          break;
+        }
+      }
+    } else {
+      console.log(selectedPoint);
+
+      formattedPoins[selectedPoint.name].x = x;
+      formattedPoins[selectedPoint.name].y = y;
+      selectedPoint = undefined;
+      ctx.clearRect(0, 0, width, height);
+      drawPoints();
+    }
+  });
+
+  canvas.addEventListener("mousemove", (event) => {
+    if (selectedPoint) {
+    }
+  });
+}
 
 function addCoordinatesToTable(table, coordinates) {
   const tbody = table.getElementsByTagName("tbody")[0];
