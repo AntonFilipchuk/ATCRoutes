@@ -1,5 +1,17 @@
-canvas {
+.points-canvas {
   border: 1px solid blue;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+}
+
+.lines-canvas {
+  border: 1px solid blue;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 0;
 }
 
 .flex-container {
@@ -46,11 +58,11 @@ td {
 }
 
 .edit-coordinate-button {
-  background-color: green ;
+  background-color: green;
   font-size: 64px;
 }
 
 .delete-coordinate-button {
-  background-color: red ;
+  background-color: red;
   font-size: 64px;
 }

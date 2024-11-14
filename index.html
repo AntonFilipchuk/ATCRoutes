@@ -9,33 +9,41 @@
 
   <body>
     <div class="flex-container">
-      <div class="canvas-flex-container">
-        <canvas id="canvas" height="4000" width="4000"></canvas>
-      </div>
-      <div class="data-flex-container">
-        <div class="menus-flex-container">
-          <div></div>
-          <h1 class="menu-select-calegory-button">Routes</h1>
-          <div>
-            <h1 class="menu-select-calegory-button">Coordinates</h1>
-          </div>
-        </div>
-        <div id="data-container">
-          <table class="coordinates-table" id="coordinates-table">
-            <thead>
-              <tr>
-                <th>Point Name</th>
-                <th>Latitude</th>
-                <th>Longitude</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-            </tbody>
-          </table>
-        </div>
+      <div style="position: relative">
+        <div class="canvas-flex-container"></div>
+        <canvas
+          id="points-canvas"
+          class="points-canvas"
+        ></canvas>
+        <canvas
+          id="lines-canvas"
+          class="lines-canvas"
+        ></canvas>
       </div>
     </div>
+
+    <!-- <div class="data-flex-container">
+      <div class="menus-flex-container">
+        <div></div>
+        <h1 class="menu-select-calegory-button">Routes</h1>
+        <div>
+          <h1 class="menu-select-calegory-button">Coordinates</h1>
+        </div>
+      </div>
+      <div id="data-container">
+        <table class="coordinates-table" id="coordinates-table">
+          <thead>
+            <tr>
+              <th>Point Name</th>
+              <th>Latitude</th>
+              <th>Longitude</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div> -->
   </body>
   <script type="module" src="./main.js"></script>
 </html>

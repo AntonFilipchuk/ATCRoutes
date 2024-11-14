@@ -4,11 +4,22 @@ import { findIntersectionBetweenRoutes } from "./modules/routessIntersectionFind
 
 const coordinatesTable = document.getElementById("coordinates-table");
 
-var canvas = document.getElementById("canvas");
-var width = canvas.width;
-var height = canvas.height;
+const width = 4000;
+const height = 4000;
 
-const ctx = canvas.getContext("2d");
+const pointsCanvasContext = document.getElementById("points-canvas").getContext("2d");
+const routesCanvasContext = document.getElementById("lines-canvas").getContext("2d");
+console.log(pointsCanvasContext);
+
+pointsCanvasContext.canvas.height = height;
+pointsCanvasContext.canvas.width = width;
+
+routesCanvasContext.canvas.height = height;
+routesCanvasContext.canvas.width = width;
+// const width = pointsCanvas.width;
+// const height = pointsCanvas.height;
+
+//const ctx = pointsCanvas.getContext("2d");
 
 const distanceCoeficient = 100;
 
@@ -103,48 +114,11 @@ dataFormatter.getCoordinatesData().then((rawCoordinatesData) => {
     formattedCoordinatesToCartesion
   );
 
-  const drawnPointsForDimgi = drawer.drawRoute(
-    dimgi3AFormatted,
-    ctx,
-    "red",
-    10
-  );
-  drawer.drawRoute(testRouteFormatted, ctx, "green", 10);
+  const dimgiPoints = drawer.drawPoints(dimgi3AFormatted, pointsCanvasContext, "red", "black", 10);
+  drawer.drawRoute(dimgi3AFormatted, routesCanvasContext, "red", 10)
 
-  const intersections = findIntersectionBetweenRoutes(
-    dimgi3AFormatted,
-    testRouteFormatted
-  );
-
-  //console.log(intersections);
-
-  intersections.forEach((intersection) => {
-    drawer.drawPoint(intersection, ctx);
-  });
-
-  canvas.addEventListener("click", (event) => {
-    const isPointInPath = ctx.isPointInPath(
-      drawnPointsForDimgi[0],
-      event.offsetX,
-      event.offsetY
-    );
-
-    const isPointInStroke = ctx.isPointInStroke(
-      drawnPointsForDimgi[0],
-      event.offsetX,
-      event.offsetY
-    );
-
-    if (isPointInPath || isPointInStroke) {
-      console.log(drawnPointsForDimgi[0]);
-    }
-  });
-
-  canvas.addEventListener("mousemove", (event) => {
-    drawer.drawPoint({x : event.offsetX, y : event.offsetY}, ctx);
-  });
-
-  addCoordinatesToTable(coordinatesTable, formattedCoordinates);
+  const testPoints = drawer.drawPoints(testRouteFormatted, pointsCanvasContext, "green", "black", 10);
+  drawer.drawRoute(testRouteFormatted, routesCanvasContext, "green", 10)
 });
 
 function addCoordinatesToTable(table, coordinates) {

@@ -4,13 +4,11 @@ const pointWidth = 25;
 const pointHeight = 25;
 
 export function drawRoute(routeData, canvasContext, color, width) {
-  const drawnPoints = [];
-
   const { points } = routeData;
 
   if (Object.keys(points).length == 0) {
-    console.error(`There are no points for ${routeData.name} route!`);
-    return undefined;
+    console.error(`Can't draw a route! There are no points for ${routeData.name} route!`);
+    return null;
   }
 
   canvasContext.beginPath();
@@ -20,19 +18,31 @@ export function drawRoute(routeData, canvasContext, color, width) {
   Object.values(points).forEach((point, index) => {
     if (index == 0) {
       canvasContext.moveTo(point.x, point.y);
-      //drawPoint(point, canvasContext)
-      drawnPoints.push(drawPointAsPath(point, canvasContext));
-      //drawText(Object.keys(points)[index], point, canvasContext);
     } else {
       canvasContext.lineTo(point.x, point.y);
-       //drawPoint(point, canvasContext)
-      drawnPoints.push(drawPointAsPath(point, canvasContext));
-      //drawText(Object.keys(points)[index], point, canvasContext);
     }
   });
-
   canvasContext.stroke();
-  return drawnPoints;
+}
+
+export function drawPoints(route, canvasContext, fillColor, strokeColor, strokeWidth) {
+  const drawnPoints = [];
+  const { points } = route;
+
+  canvasContext.fillStyle = fillColor;
+  canvasContext.strokeStyle = strokeColor;
+  canvasContext.lineWidth = strokeWidth;
+
+  if (Object.keys(points).length == 0) {
+    console.error(`Can't draw points for a route! There are no points for ${routeData.name} route!`);
+    return null;
+  }
+
+  Object.values(points).forEach((point) => {
+    drawnPoints.push(drawPointAsPath(point, canvasContext));
+  });
+
+  return drawPoints;
 }
 
 export function drawPoint(pointCoordinates, canvasContext) {
@@ -44,6 +54,8 @@ export function drawPoint(pointCoordinates, canvasContext) {
   );
 }
 
+
+
 function drawPointAsPath(pointCoordinates, canvasContext) {
   const path = new Path2D();
   path.rect(
@@ -53,7 +65,7 @@ function drawPointAsPath(pointCoordinates, canvasContext) {
     pointHeight
   );
   canvasContext.stroke(path);
-  canvasContext.fill(path)
+  canvasContext.fill(path);
   return path;
 }
 
