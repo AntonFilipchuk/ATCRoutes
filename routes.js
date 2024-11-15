@@ -9,6 +9,13 @@ export const testRoute = {
     test4: "250",
     test5: "240",
     test6: "200",
+    test7: "180",
+    test8: "160",
+    test9: "140",
+    test10: "120",
+    test11: "100",
+    test12: "80",
+    test13: "60",
   },
 };
 

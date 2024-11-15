@@ -3,6 +3,7 @@ import * as drawer from "./modules/drawer.js";
 import * as routes from "./routes.js";
 import * as canvas from "./modules/canvas.js";
 import { getRandomColor } from "./modules/randomColorGenerator.js";
+import { findIntersectionBetweenRoutes } from "./modules/routesIntersectionFinder.js";
 
 const coordinatesTable = document.getElementById("coordinates-table");
 
@@ -44,29 +45,25 @@ dataFormatter.getCoordinatesData().then((rawCoordinatesData) => {
 
   const drawFunctions = [];
   const standartRoutes = routes.getStandartRoutes();
-  standartRoutes.forEach((route) => {
-    const formattedRoute = dataFormatter.getFormattedRoute(
+  const formattedRoutes = standartRoutes.map((route) => {
+    return dataFormatter.getFormattedRoute(
       route,
       formattedCoordinatesToCartesion
     );
+  });
 
+  formattedRoutes.forEach((route) => {
     const randomColor = getRandomColor();
 
     const drawPoints = () =>
-      drawer.drawPoints(
-        formattedRoute,
-        pointsCanvasContext,
-        randomColor,
-        "black",
-        10
-      );
+      drawer.drawPoints(route, pointsCanvasContext, randomColor, "black", 10);
 
     const drawRoute = () =>
-      drawer.drawRoute(formattedRoute, routesCanvasContext, randomColor, 10);
+      drawer.drawRoute(route, routesCanvasContext, randomColor, 10);
 
     const drawText = () => {
       drawer.drawPointsNamesForRoute(
-        formattedRoute,
+        route,
         textCanvasContext,
         "black",
         randomColor,
@@ -119,12 +116,45 @@ dataFormatter.getCoordinatesData().then((rawCoordinatesData) => {
   drawTestRouteText();
 
   const redrawCanvases = () => {
-    canvas.redrawCanvases([...drawFunctions, drawTestRoute, drawTestPoints, drawTestRouteText]);
+    canvas.redrawCanvases([
+      ...drawFunctions,
+      drawTestRoute,
+      drawTestPoints,
+      drawTestRouteText,
+    ]);
   };
 
   const cleanCanvases = () => {
     canvas.cleanCanvases([pointsCanvas, routesCanvas, textCanvas]);
   };
+
+  const drawIntersectionPoints = () => {
+    const intersections = [];
+    formattedRoutes.forEach((route) => {
+      const intersection = findIntersectionBetweenRoutes(
+        formattedTestRoute,
+        route
+      );
+      if (intersection.length > 0) {
+        intersections.push(intersection);
+      }
+    });
+
+    intersections.forEach((intersection) => {
+
+      //TODO FIX color
+      pointsCanvasContext.strokeStyle = "black";
+      pointsCanvasContext.fillStyle = "red";
+      pointsCanvasContext.lineWidth = 5;
+      Object.values(intersection).forEach((point) => {
+        drawer.drawPoint(point, pointsCanvasContext, "red", "black");
+      });
+    });
+  };
+
+  drawFunctions.push(drawIntersectionPoints);
+
+  drawIntersectionPoints();
 
   enableDragPointForRoute(
     testPoints,
