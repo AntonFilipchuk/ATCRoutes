@@ -7,7 +7,9 @@ export function drawRoute(routeData, canvasContext, color, width) {
   const { points } = routeData;
 
   if (Object.keys(points).length == 0) {
-    console.error(`Can't draw a route! There are no points for ${routeData.name} route!`);
+    console.error(
+      `Can't draw a route! There are no points for ${routeData.name} route!`
+    );
     return null;
   }
 
@@ -25,7 +27,13 @@ export function drawRoute(routeData, canvasContext, color, width) {
   canvasContext.stroke();
 }
 
-export function drawPoints(route, canvasContext, fillColor, strokeColor, strokeWidth) {
+export function drawPoints(
+  route,
+  canvasContext,
+  fillColor,
+  strokeColor,
+  strokeWidth
+) {
   const drawnPoints = [];
   const { points } = route;
 
@@ -34,7 +42,9 @@ export function drawPoints(route, canvasContext, fillColor, strokeColor, strokeW
   canvasContext.lineWidth = strokeWidth;
 
   if (Object.keys(points).length == 0) {
-    console.error(`Can't draw points for a route! There are no points for ${routeData.name} route!`);
+    console.error(
+      `Can't draw points for a route! There are no points for ${routeData.name} route!`
+    );
     return null;
   }
 
@@ -54,8 +64,6 @@ export function drawPoint(pointCoordinates, canvasContext) {
   );
 }
 
-
-
 function drawPointAsPath(point, canvasContext) {
   const path = new Path2D();
   path.rect(
@@ -70,7 +78,34 @@ function drawPointAsPath(point, canvasContext) {
   return point;
 }
 
-function drawText(pointName, point, canvasContext) {
-  canvasContext.font = "48px serif";
-  canvasContext.fillText(pointName + ` [${point.z}]`, point.x, point.y);
+export function drawPointsNamesForRoute(
+  route,
+  canvasContext,
+  strokeColor,
+  fillColor,
+  font,
+  width
+) {
+  const points = route.points;
+
+  Object.values(points).forEach((point) => {
+    drawText(point, canvasContext, strokeColor, fillColor, font, width);
+  });
+}
+
+function drawText(point, canvasContext, strokeColor, fillColor, font, width) {
+  canvasContext.strokeStyle = strokeColor;
+  canvasContext.fillStyle = fillColor;
+  canvasContext.font = font;
+  canvasContext.lineWidth = width;
+  canvasContext.fillText(
+    point.name + ` [${point.z}]`,
+    point.x + (point.x / 100) * 2,
+    point.y + (point.y / 100) * 2
+  );
+  canvasContext.strokeText(
+    point.name + ` [${point.z}]`,
+    point.x + (point.x / 100) * 2,
+    point.y + (point.y / 100) * 2
+  );
 }

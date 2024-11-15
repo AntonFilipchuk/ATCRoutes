@@ -1,6 +1,7 @@
 import * as dataFormatter from "./modules/dataFormatter.js";
 import * as drawer from "./modules/drawer.js";
 import * as routes from "./routes.js";
+import * as canvas from "./modules/canvas.js";
 import { getRandomColor } from "./modules/randomColorGenerator.js";
 
 const coordinatesTable = document.getElementById("coordinates-table");
@@ -9,15 +10,17 @@ const width = 4000;
 const height = 4000;
 
 const pointsCanvas = document.getElementById("points-canvas");
-const pointsCanvasContext = pointsCanvas.getContext("2d");
 const routesCanvas = document.getElementById("lines-canvas");
+const textCanvas = document.getElementById("text-canvas");
+const pointsCanvasContext = pointsCanvas.getContext("2d");
 const routesCanvasContext = routesCanvas.getContext("2d");
+const textCanvasContext = textCanvas.getContext("2d");
 
-pointsCanvasContext.canvas.height = height;
-pointsCanvasContext.canvas.width = width;
-
-routesCanvasContext.canvas.height = height;
-routesCanvasContext.canvas.width = width;
+setCanvasesDimensions(
+  [pointsCanvasContext, routesCanvasContext, textCanvasContext],
+  width,
+  height
+);
 
 const distanceCoeficient = 100;
 
@@ -28,7 +31,6 @@ const originCoordinateName = "rw06";
 dataFormatter.getCoordinatesData().then((rawCoordinatesData) => {
   let formattedCoordinates =
     dataFormatter.getformatedCoordinates(rawCoordinatesData);
-  //console.log(formattedCoordinates);
 
   let formattedCoordinatesToCartesion =
     dataFormatter.getformatedCoordinatesToCartesion(
@@ -62,10 +64,22 @@ dataFormatter.getCoordinatesData().then((rawCoordinatesData) => {
     const drawRoute = () =>
       drawer.drawRoute(formattedRoute, routesCanvasContext, randomColor, 10);
 
+    const drawText = () => {
+      drawer.drawPointsNamesForRoute(
+        formattedRoute,
+        textCanvasContext,
+        "black",
+        randomColor,
+        "52px Calibri",
+        2
+      );
+    };
+
+    drawText();
     drawPoints();
     drawRoute();
 
-    drawFunctions.push(...[drawPoints, drawRoute]);
+    drawFunctions.push(...[drawPoints, drawRoute, drawText]);
   });
 
   const testRoute = routes.testRoute;
@@ -89,69 +103,64 @@ dataFormatter.getCoordinatesData().then((rawCoordinatesData) => {
     drawer.drawRoute(formattedTestRoute, routesCanvasContext, "green", 10);
   };
 
+  const drawTestRouteText = () => {
+    drawer.drawPointsNamesForRoute(
+      formattedTestRoute,
+      textCanvasContext,
+      "green",
+      "black",
+      "52px Calibri",
+      2
+    );
+  };
+
   const testPoints = drawTestPoints();
   drawTestRoute();
+  drawTestRouteText();
 
-  dragPoint(
+  const redrawCanvases = () => {
+    canvas.redrawCanvases([...drawFunctions, drawTestRoute, drawTestPoints, drawTestRouteText]);
+  };
+
+  const cleanCanvases = () => {
+    canvas.cleanCanvases([pointsCanvas, routesCanvas, textCanvas]);
+  };
+
+  enableDragPointForRoute(
     testPoints,
-    pointsCanvas,
-    [pointsCanvas, routesCanvas],
-    [...drawFunctions, drawTestRoute, drawTestPoints],
-    formattedTestRoute.points
+    pointsCanvasContext,
+    formattedTestRoute.points,
+    redrawCanvases,
+    cleanCanvases
   );
 });
 
-function dragPoint(
-  points,
-  pointsCanvas,
-  otherCanvases,
-  redrawFunctions,
-  formattedPoins
+function enableDragPointForRoute(
+  routePointsAsPath2d,
+  pointsCanvasContext,
+  formattedPoints,
+  redrawCanvasesFunction,
+  cleanCanvasesFunction
 ) {
-  const pointsCanvasContext = pointsCanvas.getContext("2d");
   let selectedPoint = undefined;
-
   pointsCanvas.addEventListener("mousedown", (event) => {
-    //On right click reset point
-    if (event.which == 3) {
-      selectedPoint = undefined;
-    }
-
-    const x = event.offsetX;
-    const y = event.offsetY;
-
-    if (!selectedPoint) {
-      for (const point of points) {
-        const pointPath = point.path;
-        if (
-          pointsCanvasContext.isPointInPath(pointPath, x, y) ||
-          pointsCanvasContext.isPointInStroke(pointPath, x, y)
-        ) {
-          console.log(`Selected point ${point.name}!`, point);
-          selectedPoint = point;
-          break;
-        }
-      }
-    } else {
-      formattedPoins[selectedPoint.name].x = x;
-      formattedPoins[selectedPoint.name].y = y;
-      cleanCanvases([pointsCanvas, ...otherCanvases]);
-      redrawFunctions.forEach((func) => {
-        func();
-      });
-      selectedPoint = undefined;
-    }
+    selectedPoint = canvas.dragPoint(
+      event,
+      selectedPoint,
+      routePointsAsPath2d,
+      pointsCanvasContext,
+      redrawCanvasesFunction,
+      cleanCanvasesFunction,
+      formattedPoints
+    );
   });
 }
 
-function cleanCanvases(canvases) {
-  canvases.forEach((canvas) => {
-    cleanCanvas(canvas);
+function setCanvasesDimensions(canvasContexts, width, height) {
+  canvasContexts.forEach((canvasContext) => {
+    canvasContext.canvas.width = width;
+    canvasContext.canvas.height = height;
   });
-}
-
-function cleanCanvas(canvas) {
-  canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
 }
 
 function addCoordinatesToTable(table, coordinates) {
