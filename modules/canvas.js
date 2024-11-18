@@ -35,8 +35,14 @@ export function dragPoint(
 }
 
 export function redrawCanvases(drawFunctionsArray) {
+  console.log(drawFunctionsArray);
+
   drawFunctionsArray.forEach((func) => {
-    func();
+    if (typeof func === "function") {
+      func();
+    } else {
+      console.error(`${func.toString()} is not a function!`);
+    }
   });
 }
 

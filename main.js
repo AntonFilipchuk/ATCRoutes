@@ -3,7 +3,10 @@ import * as drawer from "./modules/drawer.js";
 import * as routes from "./routes.js";
 import * as canvas from "./modules/canvas.js";
 import { getRandomColor } from "./modules/randomColorGenerator.js";
-import { findIntersectionBetweenRoutes } from "./modules/routesIntersectionFinder.js";
+import {
+  findIntersectionBetween2Routes,
+  findIntersectionsBetweenAllRoutes,
+} from "./modules/routesIntersectionFinder.js";
 
 const coordinatesTable = document.getElementById("coordinates-table");
 
@@ -128,33 +131,38 @@ dataFormatter.getCoordinatesData().then((rawCoordinatesData) => {
     canvas.cleanCanvases([pointsCanvas, routesCanvas, textCanvas]);
   };
 
-  const drawIntersectionPoints = () => {
-    const intersections = [];
-    formattedRoutes.forEach((route) => {
-      const intersection = findIntersectionBetweenRoutes(
-        formattedTestRoute,
-        route
-      );
-      if (intersection.length > 0) {
-        intersections.push(intersection);
-      }
-    });
-
-    intersections.forEach((intersection) => {
-
+  const drawIntersectionPoints = (intersectionsArray) => {
+    intersectionsArray.forEach((intersections) => {
       //TODO FIX color
       pointsCanvasContext.strokeStyle = "black";
       pointsCanvasContext.fillStyle = "red";
       pointsCanvasContext.lineWidth = 5;
-      Object.values(intersection).forEach((point) => {
+      Object.values(intersections).forEach((point) => {
         drawer.drawPoint(point, pointsCanvasContext, "red", "black");
       });
     });
   };
 
-  drawFunctions.push(drawIntersectionPoints);
+  const drawIntersectionPointsText = (intersectionsArray) => {
+    intersectionsArray.forEach((intersections) => {
+      intersections.forEach((point) => {
+        drawer.drawText(`[${point.z}]`, point, pointsCanvasContext);
+      });
+    });
+  };
 
-  drawIntersectionPoints();
+  const drawIntersectionPointsAndText = () => {
+    const intersectionsArray = findIntersectionsBetweenAllRoutes(
+      formattedRoutes,
+      formattedTestRoute
+    );
+    drawIntersectionPoints(intersectionsArray);
+    drawIntersectionPointsText(intersectionsArray);
+  };
+
+  drawIntersectionPointsAndText();
+
+  drawFunctions.push(drawIntersectionPointsAndText);
 
   enableDragPointForRoute(
     testPoints,

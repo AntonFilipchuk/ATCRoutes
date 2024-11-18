@@ -55,7 +55,15 @@ export function drawPoints(
   return drawnPoints;
 }
 
-export function drawPoint(pointCoordinates, canvasContext) {
+export function drawPoint(
+  pointCoordinates,
+  canvasContext,
+  fillColor,
+  strokeColor
+) {
+  canvasContext.fillStyle = fillColor;
+  canvasContext.strokeStyle = strokeColor;
+
   return canvasContext.fillRect(
     pointCoordinates.x - pointWidth / 2,
     pointCoordinates.y - pointHeight / 2,
@@ -89,11 +97,25 @@ export function drawPointsNamesForRoute(
   const points = route.points;
 
   Object.values(points).forEach((point) => {
-    drawText(point, canvasContext, strokeColor, fillColor, font, width);
+    drawTextForNamedPoint(
+      point,
+      canvasContext,
+      strokeColor,
+      fillColor,
+      font,
+      width
+    );
   });
 }
 
-function drawText(point, canvasContext, strokeColor, fillColor, font, width) {
+export function drawTextForNamedPoint(
+  point,
+  canvasContext,
+  strokeColor,
+  fillColor,
+  font,
+  width
+) {
   canvasContext.strokeStyle = strokeColor;
   canvasContext.fillStyle = fillColor;
   canvasContext.font = font;
@@ -105,6 +127,32 @@ function drawText(point, canvasContext, strokeColor, fillColor, font, width) {
   );
   canvasContext.strokeText(
     point.name + ` [${point.z}]`,
+    point.x + (point.x / 100) * 2,
+    point.y + (point.y / 100) * 2
+  );
+}
+
+export function drawText(
+  text,
+  point,
+  canvasContext,
+  strokeColor = "black",
+  fillColor = "black",
+  font = "Calibri",
+  fontSize = "52px",
+  width = 2
+) {
+  canvasContext.strokeStyle = strokeColor;
+  canvasContext.fillStyle = fillColor;
+  canvasContext.font = `${fontSize} ${font}`;
+  canvasContext.lineWidth = width;
+  canvasContext.fillText(
+    text,
+    point.x + (point.x / 100) * 2,
+    point.y + (point.y / 100) * 2
+  );
+  canvasContext.strokeText(
+    text,
     point.x + (point.x / 100) * 2,
     point.y + (point.y / 100) * 2
   );
